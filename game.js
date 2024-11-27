@@ -13,12 +13,8 @@ let tableX, tableY, tableWidth, tableHeight;
 let explosionSize = 0;
 let lightColor, darkColor;
 let howToPlayArea;
-let restartAllowed = false;
 let landedSafely = false;
-let bubblesize = 0;
-let coolDown = false;
-let cooldownTime = 3000;
-let lastSpacePress = 0;
+let winStreak = 0;
 
 
 function setup() {
@@ -110,12 +106,15 @@ function gamePlay() {
       landedSafely = true;
       lightColor = color(68, 165, 71);
       darkColor = color(50, 120, 65);
-      score += 10;
-      bubbleSize = 100;
+      //increses the winstreak by 10 
+      winStreak ++;
+      score += 10 * winStreak;
     } else {
       landedSafely = false;
       explosionSize = 100;
       gameOverMessage = "YOU DESTROYED IT!, try again";
+      winStreak = 0;
+      score = -10;
     }
     y = tableY - tableHeight / 2 - 65;
     velocity = 0;
@@ -144,11 +143,6 @@ function gameOverScreen() {
   textSize(20);
   text("Score: " + score, width / 2, height / 1.8);
 
-  //cooldown timer, last time user pressed space - 3 sec (dosent work?)
-  if (millis() - lastSpacePress >= cooldownTime) {
-    textSize(16);
-    text("Press SPACE to Restart", width / 2, height / 1.5);
-  }
 }
 
 function drawTable() {
@@ -211,12 +205,6 @@ function drawExplosion() {
   }
 }
 
-function drawBubbles(x, y, size) {
-  fill(255, 250, 240, 210);
-  noStroke();
-  ellipse(x, y, size, size);
-}
-
 //velocity at the top left
 function displayVelocity() {
   fill(255);
@@ -259,8 +247,5 @@ function keyPressed() {
     explosionSize = 0;
     restartAllowed = false;
   } else if (gameState === "howToPlay" && keyCode === BACKSPACE){
-    gameState = "start";
-  }
+    gameState = "start";} 
 }
-
-
